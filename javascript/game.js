@@ -5,6 +5,7 @@ var losses;
 var guessesLeft;
 var random;
 var blankWord;
+var wordArray = [];
 var randomArray = [];
 var guessArray = [];
 var charArray = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -22,104 +23,144 @@ window.onload = function () {
     guessed.textContent = guessArray.toString();
     blankWord = document.getElementById("word");
 
+    // Initial Scores and text set
+
+    // Random number function
+    // X is range
+    function randomNum(x) {
+        var num = Math.floor((Math.random() * (x)));
+        return num;
+    }
+
+    // Blank Creation
+    function createBlank(x) {
+        blankArray = [];
+        for (var i = 0; i < randomArray.length; i++) {
+            blankArray.push("_");
+        }
+        blankWord.textContent = blankArray.join(" ");
+    }
+
+    // Blank Replacement
+    function replaceBlank(x) {
+        var updateBlank = [];
+        for (var i = 0; i < randomArray.length; i++) {
+            if (randomArray[i] == x) {
+                updateBlank.push(x);
+            } else if (blankArray[i] != "_") {
+                updateBlank.push(blankArray[i]);
+            } else {
+                updateBlank.push("_");
+            }
+        }
+        blankArray = updateBlank;
+        blankWord.textContent = updateBlank.join(" ")
+    }
+
+    // Reset Answer
+    function resetAnswer() {
+        var i = randomNum(wordBank.length);
+        var word = wordBank[i];
+        random = word;
+        randomArray = random.split("");
+        console.log(randomArray);
+    }
+    // Compare input to computer
+    // X is input
+    // Y is computer
+    function compareComp(x, y) {
+        var check = false;
+        for (var i = 0; i < y.length; i++) {
+            if (x == y[i]) {
+                console.log("compareComp function: true");
+                check = true;
+            } else {}
+        }
+        return check;
+    }
+
+    // Check array if already guessed
+    function checkArray(x) {
+        var check = false;
+        for (j = 0; j < guessArray.length; j++) {
+            if (x == guessArray[j]) {
+                check = true;
+            } else {}
+        }
+        console.log("checkArray: " + check);
+        return check;
+    }
+
+    // Add to letter guessed array
+    function addGuessed(x, y) {
+        if (y == false) {
+            guessArray.push(x);
+            console.log("addGuess:" + guessed.textContent);
+            guessed.textContent = guessArray.toString();
+        } else {}
+    }
+
+    function winCheck() {
+        var check = false;
+        for (var i = 0; i < blankArray.length; i++) {
+            if (blankArray.includes("_") == true) {
+                check = false;
+            } else {
+                check = true;
+            }
+        }
+        if (check == true) {
+            blankWord.textContent = blankArray.join("");
+            alert("You Win!");
+        } else {}
+        console.log("Win: " + check);
+        return check;
+    }
+
+
     // Initial Answer Set
     resetAnswer();
     createBlank();
     console.log("Answer is: " + random);
 
-}
-
-// Initial Scores and text set
-
-// Random number function
-// X is range
-function randomNum(x) {
-    var num = Math.floor((Math.random() * (x)));
-    return num;
-}
-
-// Blank Creation
-function createBlank(x) {
-    var blankArray = [];
-    for (var i = 0; i < randomArray.length; i++) {
-        blankArray.push("_ ");
-    }
-    blankWord.textContent = blankArray.join(" ");
-}
-
-// Reset Answer
-function resetAnswer() {
-    var i = randomNum(wordBank.length);
-    var word = wordBank[i];
-    random = word;
-    randomArray = random.split("");
-}
-// Compare input to computer
-// X is input
-// Y is computer
-function compareComp(x, y) {
-    if (x == y) {
-        console.log("compareComp function: true");
-        return true;
-    } else {
-        console.log("compareComp function: false");
-        return false;
-    }
-}
-
-// Check array for guess
-function checkArray(x) {
-    var check = false;
-    for (j = 0; j < guessArray.length; j++) {
-        if (x == guessArray[j]) {
-            check = true;
-        } else {}
-    }
-    console.log("checkArray: " + check);
-    return check;
-}
-
-// Add to guessed array
-function addGuessed(x, y) {
-    if (y == false) {
-        guessArray.push(x);
-        console.log("addGuess:" + guessed.textContent);
-        guessed.textContent = guessArray.toString();
-    } else {}
-}
-
-// Game Logic
-// Start on Key
-document.onkeyup = function (event) {
-    // Check if button is a number
-    if (event.keyCode >= 48 && event.keyCode <= 57 || event.keyCode >= 65 && event.keyCode <= 90) {
-        // Input Check
-        console.log("Key Input: " + event.key);
-        if (guessesLeft.textContent > 0) {
-            if (compareComp(event.key, random) == true) {
+    // Game Logic
+    // Start on Key
+    document.onkeyup = function (event) {
+        // Check if button is a number
+        if (event.keyCode >= 65 && event.keyCode <= 90) {
+            // Input Check
+            console.log("Key Input: " + event.key);
+            if (guessesLeft.textContent > 0) {
+                if (compareComp(event.key, randomArray) == true) {
+                    replaceBlank(event.key);
+                    addGuessed(event.key, checkArray(event.key));
+                    guessesLeft.textContent--
+                    console.log("Right Guess");
+                } else {
+                    guessesLeft.textContent--
+                    addGuessed(event.key, checkArray(event.key));
+                    console.log("Wrong Guess");
+                }
+            } 
+            else if(winCheck() == true){
+                guessed.textContent = "";
                 wins.textContent++
-                alert("You win!");
-                addGuessed(event.key, checkArray(event.key));
+                guessArray = [];
                 resetAnswer();
+                createBlank();
                 guessesLeft.textContent = 9;
                 console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
-            } else {
-                guessesLeft.textContent--
-                addGuessed(event.key, checkArray(event.key));
-                console.log("Wrong Guess")
             }
-        } else {
-            alert("You lose");
-            losses.textContent++
-            guessed.textContent = "";
-            guessArray = [];
-            resetAnswer();
-            guessesLeft.textContent = 9;
-            console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
-        }
-
-    } else {
-        // Input Check
-        console.log("Incorrect input: " + event.key);
+            else {
+                alert("You lose");
+                losses.textContent++
+                guessed.textContent = "";
+                guessArray = [];
+                resetAnswer();
+                createBlank();
+                guessesLeft.textContent = 9;
+                console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
+            }
+        } else {}
     }
 }

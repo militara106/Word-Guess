@@ -9,7 +9,7 @@ var wordArray = [];
 var randomArray = [];
 var guessArray = [];
 var charArray = 'abcdefghijklmnopqrstuvwxyz'.split('');
-var wordBank = ["bee", "hive", "honey", "stinger"];
+var wordBank = ["bee", "hive", "honey", "stinger", "nectar", "pollen", "swarm", "drone", "wax", "fly", "queen", "flower"];
 
 // On window load
 window.onload = function () {
@@ -111,7 +111,16 @@ window.onload = function () {
         }
         if (check == true) {
             blankWord.textContent = blankArray.join("");
-            alert("You Win!");
+            setTimeout(function() { alert("You Win!"); }, 100);
+            setTimeout(function () {
+                wins.textContent++
+                guessed.textContent = "";
+                guessArray = [];
+                resetAnswer();
+                createBlank();
+                guessesLeft.textContent = 9;
+                console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
+            }, 1000);
         } else {}
         console.log("Win: " + check);
         return check;
@@ -130,27 +139,29 @@ window.onload = function () {
         if (event.keyCode >= 65 && event.keyCode <= 90) {
             // Input Check
             console.log("Key Input: " + event.key);
-            if (guessesLeft.textContent > 0) {
+            if (guessesLeft.textContent > 0 && winCheck() == false) {
                 if (compareComp(event.key, randomArray) == true) {
                     replaceBlank(event.key);
                     addGuessed(event.key, checkArray(event.key));
                     guessesLeft.textContent--
                     console.log("Right Guess");
+                    winCheck();
                 } else {
                     guessesLeft.textContent--
                     addGuessed(event.key, checkArray(event.key));
                     console.log("Wrong Guess");
                 }
-            } 
-            else if(winCheck() == true){
-                guessed.textContent = "";
-                wins.textContent++
-                guessArray = [];
-                resetAnswer();
-                createBlank();
-                guessesLeft.textContent = 9;
-                console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
             }
+            // else if(winCheck() == true && guessesLeft.textContent > 0){
+            //     guessed.textContent = "";
+            //     wins.textContent++
+            //     guessArray = [];
+            //     alert("You Win");
+            //     resetAnswer();
+            //     createBlank();
+            //     guessesLeft.textContent = 9;
+            //     console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
+            // }
             else {
                 alert("You lose");
                 losses.textContent++

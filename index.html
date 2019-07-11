@@ -13,30 +13,39 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+    <!-- Font Link -->
+    <link href="https://fonts.googleapis.com/css?family=Boogaloo&display=swap" rel="stylesheet">
+
     <!-- CSS Style Sheet -->
     <link rel="stylesheet" type="text/css" href="css/style.css">
 
     <!-- JS Link -->
     <script src="javascript/game.js"></script>
 </head>
+
 <body>
-<h1>Word Guess</h1>
-<p>Guess what word I'm thinking of</p>
+    <div class="container">
+        <div class="box"></div>
+        <img src="images/Title.png" alt="Spelling Bee" class="titleImg">
+        <div class="gameBox">
+            <p class="intro">Guess what word I'm thinking of</p>
 
-<!-- Blank Word -->
-<p class="blankWord"><span id="word"></span></p>
+            <!-- Blank Word -->
+            <p class="blankWord"><span id="word"></span></p>
 
-<!-- Wins Counter -->
-<p class="counter">Wins: <span id="wins"></span></p>
+            <!-- Wins Counter -->
+            <p class="counter">Wins: <span id="wins"></span></p>
 
-<!-- Losses Counter -->
-<p class="counter">Losses: <span id="losses"></span></p>
+            <!-- Losses Counter -->
+            <p class="counter">Losses: <span id="losses"></span></p>
 
-<!-- Guesses Left -->
-<p class="counter">Guesses Left: <span id="guessesLeft"></span></p>
+            <!-- Guesses Left -->
+            <p class="counter">Guesses Left: <span id="guessesLeft"></span></p>
 
-<!-- Guessed -->
-<p class="textArray">Your guesses so far: <span id="guessed"></span></p>
+            <!-- Guessed -->
+            <p class="counter">Your guesses so far: <span id="guessed"></span></p>
+        </div>
+    </div>
 
 </body>
 

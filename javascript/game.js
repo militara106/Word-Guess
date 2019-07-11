@@ -79,7 +79,7 @@ window.onload = function () {
         return check;
     }
 
-    // Check array if already guessed
+    // Check guessed letters if inputted letter is there
     function checkArray(x) {
         var check = false;
         for (j = 0; j < guessArray.length; j++) {
@@ -100,8 +100,21 @@ window.onload = function () {
         } else {}
     }
 
+    // Reset Game
+    function reset() {
+        guessed.textContent = "";
+        guessArray = [];
+        resetAnswer();
+        createBlank();
+        guessesLeft.textContent = 9;
+        console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
+    }
+
+    // Check if player won
     function winCheck() {
         var check = false;
+
+        // Check if the blank array is full
         for (var i = 0; i < blankArray.length; i++) {
             if (blankArray.includes("_") == true) {
                 check = false;
@@ -109,17 +122,22 @@ window.onload = function () {
                 check = true;
             }
         }
+
+        // If blank array is full
         if (check == true) {
+
+            //Show Answer
             blankWord.textContent = blankArray.join("");
-            setTimeout(function() { alert("You Win!"); }, 100);
+
+            //Delayed Win Alert
+            setTimeout(function () {
+                alert("You Win!");
+            }, 100);
+
+            //Delayed reset and counter update after alert
             setTimeout(function () {
                 wins.textContent++
-                guessed.textContent = "";
-                guessArray = [];
-                resetAnswer();
-                createBlank();
-                guessesLeft.textContent = 9;
-                console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
+                reset();
             }, 1000);
         } else {}
         console.log("Win: " + check);
@@ -139,38 +157,51 @@ window.onload = function () {
         if (event.keyCode >= 65 && event.keyCode <= 90) {
             // Input Check
             console.log("Key Input: " + event.key);
-            if (guessesLeft.textContent > 0 && winCheck() == false) {
+
+            // If player has guesses left
+            if (guessesLeft.textContent >= 1) {
+
+                // If inputted letter is in the word answer
                 if (compareComp(event.key, randomArray) == true) {
+
+                    // Replace blank spaces with correct character
                     replaceBlank(event.key);
+
+                    // Add inputted letter to 'guessed' array if it's not there
                     addGuessed(event.key, checkArray(event.key));
+
+                    // Check if the player has won
+                    winCheck();
+
+                    // Reduce guesses by 1
                     guessesLeft.textContent--
                     console.log("Right Guess");
-                    winCheck();
-                } else {
+                }
+
+                // If inputted letter is not in word answer
+                else {
                     guessesLeft.textContent--
                     addGuessed(event.key, checkArray(event.key));
                     console.log("Wrong Guess");
                 }
             }
-            // else if(winCheck() == true && guessesLeft.textContent > 0){
-            //     guessed.textContent = "";
-            //     wins.textContent++
-            //     guessArray = [];
-            //     alert("You Win");
-            //     resetAnswer();
-            //     createBlank();
-            //     guessesLeft.textContent = 9;
-            //     console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
-            // }
+
+            // If player has no guesses left
             else {
-                alert("You lose");
-                losses.textContent++
-                guessed.textContent = "";
-                guessArray = [];
-                resetAnswer();
-                createBlank();
-                guessesLeft.textContent = 9;
-                console.log("Reset: " + wins.textContent + " " + losses.textContent + " " + random);
+                
+                // Show word answer
+                blankWord.textContent = randomArray.join("");
+
+                // Delayed You Lose Alert
+                setTimeout(function () {
+                    alert("You Lose!");
+                }, 100);
+
+                // Delayed game reset after alert
+                setTimeout(function () {
+                    losses.textContent++
+                    reset();
+                }, 1000);
             }
         } else {}
     }
